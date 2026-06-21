@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Spotify Remote</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./config.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div>
+            <h1>Spotify Remote</h1>
+            <p id="connectionStatus">Not connected</p>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button id="refreshButton" class="icon-button" type="button" title="Refresh devices" aria-label="Refresh devices"></button>
+          <button id="signOutButton" class="icon-button" type="button" title="Sign out" aria-label="Sign out"></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="panel tabs-panel" aria-label="Spotify remote pages">
+          <div class="tab-list" role="tablist" aria-label="Pages">
+            <button id="tab-search" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="page-search" data-tab="search">Search</button>
+            <button id="tab-podcasts" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="page-podcasts" data-tab="podcasts">Podcasts</button>
+            <button id="tab-news-queue" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="page-news-queue" data-tab="news-queue">News Queue</button>
+            <button id="tab-unfinished" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="page-unfinished" data-tab="unfinished">Unfinished</button>
+            <button id="tab-config" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="page-config" data-tab="config">Config</button>
+            <button id="tab-connection" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="page-connection" data-tab="connection">Connection</button>
+          </div>
+
+          <section id="page-search" class="tab-page active" role="tabpanel" aria-labelledby="tab-search">
+            <div class="panel-heading compact">
+              <div>
+                <h2 id="searchTitle">Search</h2>
+                <p id="resultCount">Tracks and episodes</p>
+              </div>
+              <div id="resultTypeButtons" class="segmented-control" role="group" aria-label="Result type">
+                <button type="button" data-type="track,episode" class="active">All</button>
+                <button type="button" data-type="track">Songs</button>
+                <button type="button" data-type="episode">Episodes</button>
+              </div>
+            </div>
+
+            <form id="searchForm" class="search-form">
+              <label class="search-box" for="searchInput">
+                <span class="search-icon" aria-hidden="true"></span>
+                <input id="searchInput" name="query" autocomplete="off" placeholder="Search Spotify">
+              </label>
+              <button class="secondary-button" type="submit">Search</button>
+            </form>
+
+            <div id="resultsList" class="results-list" aria-live="polite"></div>
+          </section>
+
+          <section id="page-podcasts" class="tab-page" role="tabpanel" aria-labelledby="tab-podcasts" hidden>
+            <div class="panel-heading compact">
+              <div>
+                <h2>Followed Podcasts</h2>
+                <p id="podcastCount">Saved shows from your Spotify library</p>
+              </div>
+              <div class="podcast-actions">
+                <button id="loadPodcastsButton" class="secondary-button" type="button">Refresh</button>
+              </div>
+            </div>
+
+            <div class="podcast-controls">
+              <label class="input-group" for="podcastSortSelect">
+                <span>Sort podcasts</span>
+                <select id="podcastSortSelect" name="podcastSort">
+                  <option value="rank">Rank</option>
+                  <option value="saved">Recently followed</option>
+                  <option value="name">Podcast name</option>
+                </select>
+              </label>
+              <label class="input-group" for="podcastCategoryFilter">
+                <span>Category</span>
+                <select id="podcastCategoryFilter" name="podcastCategoryFilter">
+                  <option value="All">All</option>
+                  <option value="News">News</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+            </div>
+
+            <div id="podcastsList" class="podcasts-list" aria-live="polite"></div>
+          </section>
+
+          <section id="page-news-queue" class="tab-page" role="tabpanel" aria-labelledby="tab-news-queue" hidden>
+            <div class="panel-heading compact">
+              <div>
+                <h2>News Queue</h2>
+                <p id="newsQueueCount">Today's News episodes under 90% played</p>
+              </div>
+              <div class="podcast-actions">
+                <button id="queueNewsButton" class="primary-button" type="button">Queue</button>
+                <button id="refreshNewsQueueButton" class="secondary-button" type="button">Refresh</button>
+              </div>
+            </div>
+
+            <div id="newsQueueList" class="episodes-list" aria-live="polite"></div>
+          </section>
+
+          <section id="page-unfinished" class="tab-page" role="tabpanel" aria-labelledby="tab-unfinished" hidden>
+            <div class="panel-heading compact">
+              <div>
+                <h2>Unfinished</h2>
+                <p id="unfinishedCount">10 most recent unfinished episodes</p>
+              </div>
+              <div class="podcast-actions">
+                <button id="refreshUnfinishedButton" class="secondary-button" type="button">Refresh</button>
+              </div>
+            </div>
+
+            <div id="unfinishedList" class="episodes-list" aria-live="polite"></div>
+          </section>
+
+          <section id="page-config" class="tab-page" role="tabpanel" aria-labelledby="tab-config" hidden>
+            <div class="panel-heading compact">
+              <div>
+                <h2>Config</h2>
+                <p id="configCount">Category and rank for followed podcasts</p>
+              </div>
+              <div class="podcast-actions">
+                <label class="input-group compact-filter" for="configCategoryFilter">
+                  <span>Category</span>
+                  <select id="configCategoryFilter" name="configCategoryFilter">
+                    <option value="All">All</option>
+                    <option value="News">News</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+                <button id="loadConfigPodcastsButton" class="secondary-button" type="button">Refresh</button>
+              </div>
+            </div>
+
+            <div id="configList" class="config-list" aria-live="polite"></div>
+          </section>
+
+          <section id="page-connection" class="tab-page" role="tabpanel" aria-labelledby="tab-connection" hidden>
+            <div class="panel-heading">
+              <div>
+                <h2 id="setupTitle">Connection Parameters</h2>
+                <p id="authState">Waiting for Spotify</p>
+              </div>
+              <button id="loginButton" class="primary-button" type="button">Connect Spotify</button>
+            </div>
+
+            <div class="form-grid">
+              <label class="input-group" for="clientIdInput">
+                <span>Client ID</span>
+                <input id="clientIdInput" name="clientId" autocomplete="off" spellcheck="false" placeholder="Paste your Spotify app client ID">
+              </label>
+              <button id="saveClientButton" class="secondary-button" type="button">Save</button>
+            </div>
+
+            <div class="form-grid redirect-grid">
+              <label class="input-group" for="redirectUriInput">
+                <span>Redirect URI</span>
+                <input id="redirectUriInput" name="redirectUri" readonly>
+              </label>
+              <button id="copyRedirectButton" class="secondary-button" type="button">Copy</button>
+            </div>
+
+            <label class="input-group device-picker" for="deviceSelect">
+              <span>Target device</span>
+              <select id="deviceSelect" name="device">
+                <option value="">Active Spotify app</option>
+              </select>
+            </label>
+
+            <div class="scope-panel">
+              <span>Required scopes</span>
+              <div id="scopeList" class="scope-list" aria-label="Required scopes"></div>
+            </div>
+          </section>
+        </section>
+
+        <aside class="panel player-panel" aria-labelledby="playerTitle">
+          <div class="panel-heading compact">
+            <div>
+              <h2 id="playerTitle">Now</h2>
+              <p id="playbackState">Idle</p>
+            </div>
+            <div class="transport">
+              <button id="pauseButton" class="icon-button" type="button" title="Pause" aria-label="Pause"></button>
+              <button id="resumeButton" class="icon-button primary-icon" type="button" title="Resume" aria-label="Resume"></button>
+            </div>
+          </div>
+
+          <div id="nowPlaying" class="now-playing"></div>
+
+          <ol id="eventLog" class="event-log" aria-live="polite"></ol>
+        </aside>
+      </main>
+
+      <div id="episodeModal" class="modal-backdrop" hidden>
+        <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="episodeTitle">
+          <div class="panel-heading compact episode-heading">
+            <div>
+              <h2 id="episodeTitle">Episodes</h2>
+              <p id="episodeCount">Newest to oldest</p>
+            </div>
+            <button id="closeEpisodesButton" class="icon-button" type="button" title="Close episodes" aria-label="Close episodes"></button>
+          </div>
+          <div id="episodesList" class="episodes-list" aria-live="polite"></div>
+        </section>
+      </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
