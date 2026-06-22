@@ -4,7 +4,7 @@
   "private": true,
   "description": "A static Spotify remote and podcast queue front end for Vercel.",
   "scripts": {
-    "build": "node --check app.js && node --check server.mjs",
+    "build": "node build.mjs",
     "dev": "node server.mjs",
     "start": "node server.mjs",
     "vercel-build": "npm run build"

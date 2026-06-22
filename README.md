@@ -49,7 +49,7 @@ This is a static Vercel app. To deploy:
 3. Use these Vercel settings:
    - Framework Preset: `Other`
    - Build Command: `npm run build`
-   - Output Directory: leave empty
+   - Output Directory: `public`
    - Install Command: leave default
    - Node.js Version: `22.x`
 4. Deploy.
