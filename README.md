@@ -51,6 +51,7 @@ This is a static Vercel app. To deploy:
    - Build Command: `npm run build`
    - Output Directory: leave empty
    - Install Command: leave default
+   - Node.js Version: `22.x`
 4. Deploy.
 5. Add the deployed URL with a trailing slash to your Spotify app's Redirect URIs, for example `https://YOUR-VERCEL-PROJECT.vercel.app/`.
 
